@@ -1,0 +1,11 @@
+requests==2.32.3
+solana>=0.33.0
+solders>=0.21.0,<0.22.0
+tweepy==4.14.0
+pandas==2.2.3
+schedule==1.2.0
+beautifulsoup4==4.12.3
+vaderSentiment==3.3.2
+tenacity==8.2.3
+python-dotenv==1.0.1
+redis==5.0.1
