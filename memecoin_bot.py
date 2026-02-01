@@ -22,14 +22,7 @@ WALLET_PATH = os.getenv("WALLET_JSON_PATH", "wallet.json")
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
 SMTP_USER = os.getenv("SMTP_USER")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
-EMAIL_RECIPIENT = os.getenv("EMAIL_RECIPIENT")
-
-TRADING_ENABLED = True   # Change to False if you want to disable trading
-
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-logger = logging.getLogger(__name__)
-
-# Load wallet
+# Load wallet from base64 environment variable (Railway)
 wallet_base64 = os.getenv("WALLET_JSON_BASE64")
 if wallet_base64:
     wallet_bytes = base64.b64decode(wallet_base64)
@@ -38,6 +31,9 @@ if wallet_base64:
     logger.info(f"✅ Wallet loaded from WALLET_JSON_BASE64: {str(keypair.pubkey())}")
 else:
     # Fallback to local file
+    with open(WALLET_PATH) as f:
+        keypair = Keypair.from_bytes(json.load(f))
+    logger.info(f"✅ Wallet loaded from file: {str(keypair.pubkey())}")
     with open(WALLET_PATH) as f:
         keypair = Keypair.from_bytes(json.load(f))
     logger.info(f"✅ Wallet loaded from file: {str(keypair.pubkey())}")
