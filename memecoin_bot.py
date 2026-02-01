@@ -34,10 +34,6 @@ else:
     with open(WALLET_PATH) as f:
         keypair = Keypair.from_bytes(json.load(f))
     logger.info(f"✅ Wallet loaded from file: {str(keypair.pubkey())}")
-    with open(WALLET_PATH) as f:
-        keypair = Keypair.from_bytes(json.load(f))
-    logger.info(f"✅ Wallet loaded from file: {str(keypair.pubkey())}")
-
 async def check_balance():
     client = AsyncClient(RPC_ENDPOINT)
     try:
