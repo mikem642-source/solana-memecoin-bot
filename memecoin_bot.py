@@ -22,6 +22,13 @@ WALLET_PATH = os.getenv("WALLET_JSON_PATH", "wallet.json")
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
 SMTP_USER = os.getenv("SMTP_USER")
 SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
+EMAIL_RECIPIENT = os.getenv("EMAIL_RECIPIENT")
+
+TRADING_ENABLED = False  # Change to True only when ready
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logger = logging.getLogger(__name__)
+
 # Load wallet from base64 environment variable (Railway)
 wallet_base64 = os.getenv("WALLET_JSON_BASE64")
 if wallet_base64:
@@ -34,6 +41,7 @@ else:
     with open(WALLET_PATH) as f:
         keypair = Keypair.from_bytes(json.load(f))
     logger.info(f"✅ Wallet loaded from file: {str(keypair.pubkey())}")
+
 async def check_balance():
     client = AsyncClient(RPC_ENDPOINT)
     try:
@@ -107,8 +115,7 @@ async def main():
     schedule.every().day.at("20:00").do(send_daily_report)
     asyncio.create_task(monitor_new_tokens())
     schedule.every(15).minutes.do(lambda: asyncio.create_task(check_balance()))
-    logger.info(f"Trading is {'ENABLED' if TRADING_ENABLED else 'DISABLED'}")
-    logger.info("Press Ctrl+C to stop.")
+    logger.info("✅ Bot running. Daily reports at 08:00 & 20:00. Balance check every 15 min. Ctrl+C to stop.")
     while True:
         schedule.run_pending()
         await asyncio.sleep(1)
